@@ -36,7 +36,7 @@ public class OpsWorksGoPlugin extends GoPluginBase {
     protected GoPluginApiResponse handleGetConfigRequest() {
         Map<String, Object> config = new HashMap<String, Object>();
         config.put("appId", createField("appId", null, true, false, "0"));
-        config.put("layerId", createField("layerId", null, false, false, "1"));
+        config.put("stackId", createField("stackId", null, false, false, "1"));
         config.put("noWaitTrue", createField("noWaitTrue", null, false, false, "2"));
         return renderJSON(SUCCESS_RESPONSE_CODE, config);
     }
@@ -58,7 +58,7 @@ public class OpsWorksGoPlugin extends GoPluginBase {
             Map<String, String> envVars = (Map<String, String>) context.get("environmentVariables");
 
             String appId = getValue(configVars, "appId");
-            String layerId = getValue(configVars, "layerId");
+            String stackId = getValue(configVars, "stackId");
             String noWait = getValue(configVars, "noWaitTrue");
 
             boolean noWaitValue = (noWait != null && noWait.equals("true"));
@@ -73,7 +73,7 @@ public class OpsWorksGoPlugin extends GoPluginBase {
                 envVars.get(AWS_SECRET_ACCESS_KEY),
                 envVars.get(AWS_DEFAULT_REGION)
             );
-            Deployment d = opsWorksClient.deploy(appId, layerId, comment, revision, noWaitValue);
+            Deployment d = opsWorksClient.deploy(appId, stackId, comment, revision, noWaitValue);
 
             if (d.getStatus().equals("successful") || noWaitValue) {
                 response.put("success", true);

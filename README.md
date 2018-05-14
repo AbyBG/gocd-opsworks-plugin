@@ -6,7 +6,7 @@ From Maven Central:
 <dependency>
   <groupId>com.tispr.gocd</groupId>
   <artifactId>gocd-opsworks-plugin</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
 </dependency>
 ```
 
@@ -17,7 +17,7 @@ From Maven Central:
 ## Plugin Configuration
 
 - App ID - OpsWorks App ID
-- Layer ID - OpsWorks Layer ID (optional)
+- Stack ID - OpsWorks Stack ID
 - Don't wait for deployment to finish - default, uncheck if waiting is required.
 
 ![Plugin preview](/docs/images/gocd-opsworks-plugin-preview.png)

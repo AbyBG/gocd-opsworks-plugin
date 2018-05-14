@@ -45,20 +45,20 @@ public class OpsWorksClient {
             .build();
     }
 
-    public Deployment deploy(String appId, String layerId, String comment, String revision, boolean noWait)
+    public Deployment deploy(String appId, String stackId, String comment, String revision, boolean noWait)
             throws ExecutionException, InterruptedException {
-        return deploy(getApp(appId), getInstancesIds(layerId), comment, revision, noWait);
+        return deploy(getApp(appId), getInstancesIds(stackId), comment, revision, noWait);
     }
 
-    protected List<String> getInstancesIds(String layerId) {
+    protected List<String> getInstancesIds(String stackId) {
         List<String> instanceIds = new ArrayList<String>();
 
-        if (layerId == null || layerId.isEmpty()) {
+        if (stackId == null || stackId.isEmpty()) {
             return instanceIds;
         }
 
         DescribeInstancesRequest req = new DescribeInstancesRequest()
-                .withLayerId(layerId);
+                .withstackId(stackId);
         DescribeInstancesResult res = opsWorksClient.describeInstances(req);
 
         for (Instance i: res.getInstances()) {
