@@ -58,7 +58,7 @@ public class OpsWorksClient {
         }
 
         DescribeInstancesRequest req = new DescribeInstancesRequest()
-                .withstackId(stackId);
+                .withStackId(stackId);
         DescribeInstancesResult res = opsWorksClient.describeInstances(req);
 
         for (Instance i: res.getInstances()) {
