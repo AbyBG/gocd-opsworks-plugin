@@ -63,7 +63,14 @@ public class OpsWorksGoPlugin extends GoPluginBase {
 
             boolean noWaitValue = (noWait != null && noWait.equals("true"));
 
-            String comment = String.format("Deploy build %s via go.cd", envVars.get("GO_PIPELINE_COUNTER"));
+            String comment = String.format("Deploy build %s.%s via go.cd", envVars.get("GO_PIPELINE_LABEL"), envVars.get("GO_STAGE_COUNTER"));
+            String path = String.format("%s/%s/%s/%s/%s.%s",
+                envVars.get("GO_ARTIFACTS_S3_BUCKET"),
+                envVars.get("GO_PIPELINE_NAME"),
+                envVars.get("GO_STAGE_NAME"),
+                envVars.get("GO_JOB_NAME"),
+                envVars.get("GO_PIPELINE_LABEL"),
+                envVars.get("GO_STAGE_COUNTER"));
             String revision = envVars.get("GO_REVISION");
 
             log(String.format("[opsworks] Deployment of [appId=%s] started.", appId));
@@ -73,7 +80,7 @@ public class OpsWorksGoPlugin extends GoPluginBase {
                 envVars.get(AWS_SECRET_ACCESS_KEY),
                 envVars.get(AWS_DEFAULT_REGION)
             );
-            Deployment d = opsWorksClient.deploy(appId, stackId, comment, revision, noWaitValue);
+            Deployment d = opsWorksClient.deploy(appId, stackId, comment, path, revision, noWaitValue);
 
             if (d.getStatus().equals("successful") || noWaitValue) {
                 response.put("success", true);

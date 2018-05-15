@@ -45,9 +45,9 @@ public class OpsWorksClient {
             .build();
     }
 
-    public Deployment deploy(String appId, String stackId, String comment, String revision, boolean noWait)
+    public Deployment deploy(String appId, String stackId, String comment, String path, String revision, boolean noWait)
             throws ExecutionException, InterruptedException {
-        return deploy(getApp(appId), getInstancesIds(stackId), comment, revision, noWait);
+        return deploy(getApp(appId), getInstancesIds(stackId), comment, path, revision, noWait);
     }
 
     protected List<String> getInstancesIds(String stackId) {
@@ -80,7 +80,7 @@ public class OpsWorksClient {
         throw new IllegalArgumentException(String.format("Application [%s] not found.", appId));
     }
 
-    protected Deployment deploy(App app, List<String> instanceIds, String comment, String revision, boolean noWait)
+    protected Deployment deploy(App app, List<String> instanceIds, String comment, String path, String revision, boolean noWait)
             throws ExecutionException, InterruptedException {
         DeploymentCommand command = new DeploymentCommand()
                 .withName(DeploymentCommandName.Deploy);
@@ -98,11 +98,13 @@ public class OpsWorksClient {
             deployReq.withComment(comment);
         }
 
-        if (revision != null && !revision.isEmpty()) {
-            String customJson = String.format(
-                    "{\"deploy\":{\"%s\":{\"migrate\":false,\"scm\":{\"revision\":\"%s\"}}}}",
-                    app.getShortname(),
-                    revision
+        if (path != null && !path.isEmpty()) {
+            String source = String.format("%s/package.zip",
+                path
+            );
+            String customJson = String.format("{\"app_source\": {\"path\": \"%s\", \"revision\":\"%s\"}}",
+                source,
+                revision
             );
             deployReq.withCustomJson(customJson);
         }
