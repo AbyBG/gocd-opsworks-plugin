@@ -21,6 +21,7 @@ import com.thoughtworks.go.plugin.api.annotation.Extension;
 import com.thoughtworks.go.plugin.api.request.GoPluginApiRequest;
 import com.thoughtworks.go.plugin.api.response.GoPluginApiResponse;
 import com.tispr.aws.OpsWorksClient;
+import com.amazonaws.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -35,7 +36,8 @@ public class OpsWorksGoPlugin extends GoPluginBase {
     @Override
     protected GoPluginApiResponse handleGetConfigRequest() {
         Map<String, Object> config = new HashMap<String, Object>();
-        config.put("appId", createField("appId", null, true, false, "0"));
+
+        config.put("appId", createField("appId", null, false, false, "0"));
         config.put("stackId", createField("stackId", null, false, false, "1"));
         config.put("noWaitTrue", createField("noWaitTrue", null, false, false, "2"));
         return renderJSON(SUCCESS_RESPONSE_CODE, config);
@@ -57,8 +59,8 @@ public class OpsWorksGoPlugin extends GoPluginBase {
             Map<String, Object> context = (Map<String, Object>) map.get("context");
             Map<String, String> envVars = (Map<String, String>) context.get("environmentVariables");
 
-            String appId = getValue(configVars, "appId");
-            String stackId = getValue(configVars, "stackId");
+            String appId = StringUtils.isNullOrEmpty(getValue(configVars, "appId")) ? envVars.get("AWS_APP_ID") : getValue(configVars, "appId");
+            String stackId = StringUtils.isNullOrEmpty(getValue(configVars, "stackId")) ? envVars.get("AWS_STACK_ID") : getValue(configVars, "appId");
             String noWait = getValue(configVars, "noWaitTrue");
 
             boolean noWaitValue = (noWait != null && noWait.equals("true"));
